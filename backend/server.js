@@ -2,32 +2,28 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+// Conectamos a la base de datos de Aiven desde el principio
+require('./config/db');
+
 const app = express();
 
-// Middlewares
-app.use(cors()); // Permite que tu frontend se comunique con este servidor
-app.use(express.json()); // Permite recibir datos en formato JSON
+// 1. Middlewares (Permisos y formato)
+app.use(cors()); 
+app.use(express.json()); 
 
-// Probar que el servidor vive
+// 2. Ruta de prueba (El Cohete)
 app.get('/', (req, res) => {
     res.send('🚀 Servidor de Inventario de Abarrotes funcionando al 100%');
 });
 
-// Iniciar el servidor
+// 3. Rutas de tu aplicación (IMPORTANTE: Deben ir antes del listen)
+app.use('/api', require('./routes/apiRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
+
+// 4. Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`\n======================================`);
     console.log(` Servidor corriendo en el puerto ${PORT}`);
     console.log(`======================================\n`);
 });
-// Middlewares
-app.use(cors()); 
-app.use(express.json()); 
-
-// 🚨 AGREGA ESTA LÍNEA AQUÍ PARA ACTIVAR TUS RUTAS 🚨
-app.use('/api', require('./routes/apiRoutes'));
-app.use('/api/auth', require('./routes/authRoutes'));
-
-// Probar que el servidor vive...
-// Importamos la conexión a la base de datos para que se active
-require('./config/db');
