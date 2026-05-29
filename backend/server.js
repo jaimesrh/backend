@@ -1,9 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-
-// Conectamos a la base de datos de Aiven desde el principio
-require('./config/db');
+require('./config/db'); 
 
 const app = express();
 
